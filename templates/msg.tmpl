@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <style>
+        body {
+            /* 默认白色背景 */
+            background-color: #ffffff;
+        }
+        a,a:visited {color:#0000ee;}
+        a{text-decoration:none}
+        /* 如果设备为暗色主题，则设置背景颜色为深灰色 */
+        @media (prefers-color-scheme: dark) {
+            input{
+                background-color: rgb(218, 218, 218);
+            }
+            a,a:visited {
+                color: #00dade;
+            }
+            span,p , h1{
+                color: rgb(226, 226, 226);
+            }
+            body {
+                background-color: #333333;
+                color:rgb(226, 226, 226);
+            }
+        }
+    </style>
+</head>
+<body>
+<p>{{.msg}}</p>
+<div id="show">3秒后跳转</div>
+<a href="{{.url}}">点击直接跳转</a>
+</body>
+<script type="text/javascript">
+    var t = 2;//设定跳转的时间
+    setInterval("refer()", 1000); //启动1秒定时
+    function refer() {
+        if (t == 0){
+            location = "{{.url}}"; //跳转的地址
+        }
+        document.getElementById('show').innerHTML = "" + t + "秒后跳转"; // 显示倒计时
+        t--; // 计数器递减
+    }
+</script>
+</html>

@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://unpkg.com/mdui@1.0.2/dist/css/mdui.min.css"/>
+    <script src="https://unpkg.com/mdui@1.0.2/dist/js/mdui.min.js"></script>
+</head>
+<body>
+<button class="mdui-btn mdui-color-theme-accent mdui-ripple" mdui-dialog="{target: '#add'}">添加</button>
+<div class="mdui-row-xs-3 mdui-row-sm-4 mdui-row-md-4 mdui-row-lg-4 mdui-row-xl-4 mdui-grid-list">
+    {{range $link := .link}}
+    <div class="mdui-col">
+        <a target="_blank" href="{{.Url}}">
+    <div class="mdui-grid-tile">
+        <img src="images/{{.Img}}.png"/>
+        <div class="mdui-grid-tile-actions">
+            <div class="mdui-grid-tile-text">
+                <div class="mdui-grid-tile-title">{{.Title}}</div>
+            </div>
+        </div>
+    </div>
+        </a>
+    </div>
+    {{end}}
+</div>
+<div class="mdui-dialog" id="add">
+    <form action="/add" method="POST">
+    <div class="mdui-textfield mdui-textfield-floating-label">
+        <label class="mdui-textfield-label">链接</label>
+        <input name="url" class="mdui-textfield-input" type="text"/>
+    </div>
+    <button class="mdui-btn mdui-color-theme-accent mdui-ripple">添加</button>
+    </form>
+</div>
+</body>
+</html>

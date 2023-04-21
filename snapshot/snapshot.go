@@ -18,7 +18,7 @@ func Get(urlStr string) bool {
 	// 此处以360搜索首页为例
 	//urlStr := `https://www.csz.net`
 
-	domain := fileName(urlStr)
+	domain := FileName(urlStr)
 
 	var buf []byte
 	log.Println("正在打开网页")
@@ -49,7 +49,7 @@ func Get(urlStr string) bool {
 	return ok
 }
 
-func fileName(urlStr string) string {
+func FileName(urlStr string) string {
 	// 提取域名并替换 "." 为 "-"
 	domainOld := strings.ReplaceAll(strings.Split(urlStr, "//")[1], ".", "-")
 	domainStr := strings.Split(domainOld, "/")
