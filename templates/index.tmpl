@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://unpkg.com/mdui@1.0.2/dist/css/mdui.min.css"/>
-    <script src="https://unpkg.com/mdui@1.0.2/dist/js/mdui.min.js"></script>
+    <title>NextSure</title>
     <style>
         .grid-bg{
             background-repeat: no-repeat;
@@ -14,14 +14,21 @@
 
     </style>
 </head>
-<body>
-<button class="mdui-btn mdui-color-theme-accent mdui-ripple" mdui-dialog="{target: '#add'}">添加</button>
-<div class="mdui-row-xs-3 mdui-row-sm-4 mdui-row-md-4 mdui-row-lg-4 mdui-row-xl-4 mdui-grid-list">
+<body class="mdui-theme-layout-auto mdui-theme-primary-indigo mdui-theme-accent-pink">
+<div class="mdui-toolbar mdui-color-theme mdui-m-b-2">
+    <span class="mdui-typo-title">NextSure</span>
+    <div class="mdui-toolbar-spacer"></div>
+    <a mdui-dialog="{target: '#add'}" href="javascript:;" class="mdui-btn mdui-btn-icon">
+        <i class="mdui-icon material-icons">add</i>
+    </a>
+</div>
+<div class="mdui-p-a-1 mdui-row-xs-3 mdui-row-sm-4 mdui-row-md-4 mdui-row-lg-4 mdui-row-xl-4 mdui-grid-list">
     {{range $link := .link}}
     <div class="mdui-col">
-        <a target="_blank" href="{{.Url}}">
+        <a data-img="{{.Img}}" data-lid="{{.Lid}}" data-title="{{.Title}}" data-url="{{.Url}}" target="_blank" mdui-dialog="{target: '#more'}" class="more-btn">
     <div class="mdui-grid-tile">
-        <div class="grid-bg" style="background-image: url('images/{{.Img}}.png');"></div>
+        <div class="grid-bg" style="background-image: url('images/{{.Img}}.png');">
+        </div>
         <div class="mdui-grid-tile-actions">
             <div class="mdui-grid-tile-text">
                 <div class="mdui-grid-tile-title">{{.Title}}</div>
@@ -32,14 +39,39 @@
     </div>
     {{end}}
 </div>
-<div class="mdui-dialog" id="add">
-    <form action="/add" method="POST">
-    <div class="mdui-textfield mdui-textfield-floating-label">
-        <label class="mdui-textfield-label">链接</label>
-        <input name="url" class="mdui-textfield-input" type="text"/>
+<div class="mdui-dialog" id="more">
+    <div class="mdui-m-a-2">
+    <h3 id="more-title">111222</h3>
+    <button class="mdui-btn mdui-color-theme-accent mdui-ripple">访问</button>
+        <button class="mdui-btn mdui-color-theme-accent mdui-ripple">快照</button>
+    <button class="mdui-btn mdui-color-theme-accent mdui-ripple">刷新</button>
+    <button class="mdui-btn mdui-color-theme-accent mdui-ripple">删除</button>
     </div>
-    <button class="mdui-btn mdui-color-theme-accent mdui-ripple">添加</button>
+    <img id="more-img" src=""/>
+</div>
+<div class="mdui-dialog" id="add">
+    <form action="/add" method="POST" class="mdui-m-a-2">
+        <h3>添加收藏</h3>
+        <div class="mdui-textfield">
+            <label class="mdui-textfield-label">链接</label>
+            <input name="url" class="mdui-textfield-input" type="text"/>
+        </div>
+    <button class="mdui-btn mdui-color-theme mdui-ripple mdui-float-right mdui-m-b-2">添加</button>
     </form>
 </div>
-</body>
+<script src="https://unpkg.com/mdui@1.0.2/dist/js/mdui.min.js"></script>
+<script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
+<script>
+    $(function() {
+        $('.more-btn').click(function() {
+            var img = $(this).data('img');
+            var title = $(this).data('title');
+            $('#more-text').text(img);
+            $('#more-title').text(title);
+            $('#more-img').attr('src', "images/"+img+".png");
+        });
+    });
+</script>
+    </body>
 </html>
