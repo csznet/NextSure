@@ -7,3 +7,5 @@
 ## 目前实现的功能：
 ### 网页快照
 主要是怕收藏久了网站挂了或者内容被删掉了
+
+<img width="1045" alt="image" src="https://user-images.githubusercontent.com/127601663/233792724-4ed0551e-d599-4437-92b0-c150eb34a07d.png">
