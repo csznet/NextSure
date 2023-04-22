@@ -22,12 +22,13 @@
         <i class="mdui-icon material-icons">add</i>
     </a>
 </div>
-<div class="mdui-p-a-1 mdui-row-xs-3 mdui-row-sm-4 mdui-row-md-4 mdui-row-lg-4 mdui-row-xl-4 mdui-grid-list">
+<div class="content">
+<div style="margin: 0" class="mdui-p-a-1 mdui-row-xs-3 mdui-row-sm-4 mdui-row-md-4 mdui-row-lg-4 mdui-row-xl-4 mdui-grid-list">
     {{range $link := .link}}
     <div class="mdui-col">
         <a data-img="{{.Img}}" data-lid="{{.Lid}}" data-title="{{.Title}}" data-url="{{.Url}}" target="_blank" mdui-dialog="{target: '#more'}" class="more-btn">
     <div class="mdui-grid-tile">
-        <div class="grid-bg" style="background-image: url('images/{{.Img}}.png');">
+        <div class="grid-bg" style="background-image: url('/images/{{.Img}}.png');">
         </div>
         <div class="mdui-grid-tile-actions">
             <div class="mdui-grid-tile-text">
@@ -39,13 +40,20 @@
     </div>
     {{end}}
 </div>
+    {{ if eq (len .link) 12 }}
+<a id="next-page" class="mdui-btn load-more" style="width: 100%">下一页</a>
+    {{ end }}
+    {{ if ne (.page) 1 }}
+    <a id="prev-page" class="mdui-btn load-more" style="width: 100%">上一页</a>
+    {{ end }}
+</div>
 <div class="mdui-dialog" id="more">
     <div class="mdui-m-a-2">
-    <h3 id="more-title">111222</h3>
-    <button class="mdui-btn mdui-color-theme-accent mdui-ripple">访问</button>
-        <button class="mdui-btn mdui-color-theme-accent mdui-ripple">快照</button>
-    <button class="mdui-btn mdui-color-theme-accent mdui-ripple">刷新</button>
-    <button class="mdui-btn mdui-color-theme-accent mdui-ripple">删除</button>
+    <h3 id="more-title"></h3>
+    <a target="_blank" id="more-url" class="mdui-btn mdui-color-theme-accent mdui-ripple">访问</a>
+        <a target="_blank" id="more-snap" class="mdui-btn mdui-color-theme-accent mdui-ripple">快照</a>
+        <a target="_blank" id="more-ref" class="mdui-btn mdui-color-theme-accent mdui-ripple">刷新</a>
+        <a target="_blank" id="more-del" class="mdui-btn mdui-color-theme-accent mdui-ripple">删除</a>
     </div>
     <img id="more-img" src=""/>
 </div>
@@ -63,13 +71,30 @@
 <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 
 <script>
+    $(document).ready(function() {
+        // 假设数据地址为 http://example.com/data
+        var currentPage = {{.page}};
+        console.log(currentPage)
+        var nextPageUrl = '/page/'+ (currentPage+1);
+        var prevPageUrl = '/page/'+ (currentPage-1);
+        $('#next-page').attr('href', nextPageUrl);
+        $('#prev-page').attr('href', prevPageUrl);
+    });
+
     $(function() {
         $('.more-btn').click(function() {
             var img = $(this).data('img');
+            img = "/images/"+img+".png";
             var title = $(this).data('title');
+            var url = $(this).data('url');
+            var lid = $(this).data('lid');
             $('#more-text').text(img);
             $('#more-title').text(title);
-            $('#more-img').attr('src', "images/"+img+".png");
+            $('#more-img').attr('src', img);
+            $('#more-url').attr('href', url);
+            $('#more-ref').attr('href', "/ref/"+lid);
+            $('#more-snap').attr('href', img);
+            $('#more-del').attr('href', "/del/"+lid);
         });
     });
 </script>

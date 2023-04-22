@@ -6,6 +6,8 @@ import (
 	"gorm.io/gorm"
 	"log"
 	"nextsure/conf"
+	"nextsure/snapshot"
+	"os"
 	"time"
 )
 
@@ -64,6 +66,25 @@ func GetNoImg() (bool, conf.Link) {
 	return true, noImgLink
 }
 
+func DelLink(link conf.Link) {
+	db, err := openDB()
+	if err != nil {
+		log.Fatalln(err)
+	}
+	var result = db.First(&link, "lid = ?", link.Lid)
+	if errors.Is(result.Error, gorm.ErrRecordNotFound) {
+		log.Fatalln("Lid不存在")
+	} else if result.Error != nil {
+		log.Fatalln(result.Error)
+	}
+
+	result = db.Delete(&link)
+	os.Remove("images/" + snapshot.FileName(link.Url) + ".png")
+	if result.Error != nil {
+		log.Fatalln(result.Error)
+	}
+}
+
 func ChangeImg(link conf.Link) {
 	db, err := openDB()
 	if err != nil {
@@ -76,7 +97,8 @@ func ChangeImg(link conf.Link) {
 	} else if result.Error != nil {
 		log.Fatalln(result.Error)
 	}
-	result = db.Save(&link)
+	findLink.Img = link.Img
+	result = db.Save(&findLink)
 	if result.Error != nil {
 		log.Fatalln(result.Error)
 	}

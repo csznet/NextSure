@@ -30,9 +30,22 @@
 </head>
 <body>
 <p>{{.msg}}</p>
+{{ if eq (.url) "close" }}
+<div id="show">3秒后关闭</div>
+<script type="text/javascript">
+    var t = 2; // 设定关闭的时间
+    setInterval("closeWindow()", 1000); // 启动1秒定时
+    function closeWindow() {
+        if (t == 0) {
+            window.close(); // 关闭当前页面
+        }
+        document.getElementById('show').innerHTML = "" + t + "秒后关闭"; // 显示倒计时
+        t--; // 计数器递减
+    }
+</script>
+{{else}}
 <div id="show">3秒后跳转</div>
 <a href="{{.url}}">点击直接跳转</a>
-</body>
 <script type="text/javascript">
     var t = 2;//设定跳转的时间
     setInterval("refer()", 1000); //启动1秒定时
@@ -44,4 +57,6 @@
         t--; // 计数器递减
     }
 </script>
+{{end}}
+</body>
 </html>

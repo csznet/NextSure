@@ -9,6 +9,7 @@ import (
 	"nextsure/snapshot"
 	"nextsure/sql"
 	"regexp"
+	"strconv"
 	"time"
 )
 
@@ -17,6 +18,19 @@ func main() {
 	//println(title(url))
 	go getImg()
 	web()
+}
+
+func noImg(Lid uint) {
+	var link conf.Link
+	link.Lid = Lid
+	link.Img = "loading"
+	sql.ChangeImg(link)
+}
+
+func delLink(Lid uint) {
+	var link conf.Link
+	link.Lid = Lid
+	sql.DelLink(link)
 }
 
 func getImg() {
@@ -28,7 +42,6 @@ func getImg() {
 		}
 	}
 	time.AfterFunc(10*time.Second, getImg)
-
 }
 
 func addLink(url string) {
@@ -72,7 +85,43 @@ func web() {
 	r.StaticFS("/images", http.Dir("./images"))
 	r.GET("/", func(c *gin.Context) {
 		c.HTML(http.StatusOK, "index.tmpl", gin.H{
+			"page": 1,
 			"link": sql.GetLink(1, 12),
+		})
+	})
+	r.GET("/del/:lid", func(c *gin.Context) {
+		Lid, err := strconv.Atoi(c.Param("lid"))
+		msg := "删除失败"
+		if err == nil {
+			msg = "删除成功"
+			delLink(uint(Lid))
+		}
+		c.HTML(http.StatusOK, "msg.tmpl", gin.H{
+			"msg": msg,
+			"url": "close",
+		})
+	})
+	r.GET("/ref/:lid", func(c *gin.Context) {
+		Lid, err := strconv.Atoi(c.Param("lid"))
+		msg := "刷新快照失败"
+		if err == nil {
+			msg = "已成功加入队列"
+			noImg(uint(Lid))
+		}
+		c.HTML(http.StatusOK, "msg.tmpl", gin.H{
+			"msg": msg,
+			"url": "close",
+		})
+	})
+	r.GET("/page/:s", func(c *gin.Context) {
+		c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
+		page, err := strconv.Atoi(c.Param("s"))
+		if err != nil || page < 1 {
+			page = 1
+		}
+		c.HTML(http.StatusOK, "index.tmpl", gin.H{
+			"page": page,
+			"link": sql.GetLink(page, 12),
 		})
 	})
 	r.POST("/add", func(c *gin.Context) {
