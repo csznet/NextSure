@@ -1,10 +1,13 @@
 package main
 
 import (
+	"flag"
 	"github.com/gin-gonic/gin"
+	"html/template"
 	"io/ioutil"
 	"log"
 	"net/http"
+	"nextsure/assets"
 	"nextsure/conf"
 	"nextsure/snapshot"
 	"nextsure/sql"
@@ -12,6 +15,8 @@ import (
 	"strconv"
 	"time"
 )
+
+var webPort string
 
 func main() {
 	//snapshot.Get(url)
@@ -81,7 +86,7 @@ func title(url string) string {
 // Web Serve
 func web() {
 	r := gin.Default()
-	r.LoadHTMLGlob("templates/*")
+	r.SetHTMLTemplate(template.Must(template.New("").ParseFS(assets.Templates, "templates/*")))
 	r.StaticFS("/images", http.Dir("./images"))
 	r.GET("/", func(c *gin.Context) {
 		c.HTML(http.StatusOK, "index.tmpl", gin.H{
@@ -137,5 +142,8 @@ func web() {
 			"url": "/",
 		})
 	})
-	r.Run("0.0.0.0:8088")
+	r.Run("0.0.0.0:" + webPort)
+}
+func init() {
+	flag.StringVar(&webPort, "port", "8088", "Web Port")
 }
