@@ -62,9 +62,15 @@ func FileName(urlStr string) string {
 	return domain
 }
 
-func fullScreenshot(urlstr string, quality int, res *[]byte) cdp.Tasks {
+func fullScreenshot(urlStr string, quality int, res *[]byte) cdp.Tasks {
+	//headers := map[string]interface{}{
+	//	"User-Agent":   "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.131 Safari/537.36",
+	//	"Content-Type": "application/x-www-form-urlencoded",
+	//}
 	return cdp.Tasks{
-		cdp.Navigate(urlstr),
+		//network.Enable(),
+		//network.SetExtraHTTPHeaders(network.Headers(headers)),
+		cdp.Navigate(urlStr),
 		cdp.FullScreenshot(res, quality),
 	}
 }

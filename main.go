@@ -9,26 +9,40 @@ import (
 	"nextsure/snapshot"
 	"nextsure/sql"
 	"regexp"
+	"time"
 )
 
 func main() {
-	//url := "https://www.csz.net"
 	//snapshot.Get(url)
 	//println(title(url))
+	go getImg()
 	web()
-	//addLink("https://www.baidu.com")
+}
+
+func getImg() {
+	ok, link := sql.GetNoImg()
+	if ok {
+		if snapshot.Get(link.Url) {
+			link.Img = snapshot.FileName(link.Url)
+			sql.ChangeImg(link)
+		}
+	}
+	time.AfterFunc(10*time.Second, getImg)
+
 }
 
 func addLink(url string) {
 	var link conf.Link
 	link.Url = url
-	if !sql.ExistLink(link) {
-		link.Title = title(url)
-		if snapshot.Get(url) {
-			link.Img = snapshot.FileName(url)
-		}
-		sql.NewLink(link)
-	}
+	link.Title = title(url)
+	link.Img = "loading"
+	//if !sql.ExistLink(link) {
+	//	link.Title = title(url)
+	//	if snapshot.Get(url) {
+	//		link.Img = snapshot.FileName(url)
+	//	}
+	sql.NewLink(link)
+	//}
 }
 
 func title(url string) string {
@@ -58,7 +72,7 @@ func web() {
 	r.StaticFS("/images", http.Dir("./images"))
 	r.GET("/", func(c *gin.Context) {
 		c.HTML(http.StatusOK, "index.tmpl", gin.H{
-			"link": sql.GetLink(1, 10),
+			"link": sql.GetLink(1, 12),
 		})
 	})
 	r.POST("/add", func(c *gin.Context) {

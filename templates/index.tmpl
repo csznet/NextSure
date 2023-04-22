@@ -5,6 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://unpkg.com/mdui@1.0.2/dist/css/mdui.min.css"/>
     <script src="https://unpkg.com/mdui@1.0.2/dist/js/mdui.min.js"></script>
+    <style>
+        .grid-bg{
+            background-repeat: no-repeat;
+            background-size: contain;
+            height: 500px;
+        }
+
+    </style>
 </head>
 <body>
 <button class="mdui-btn mdui-color-theme-accent mdui-ripple" mdui-dialog="{target: '#add'}">添加</button>
@@ -13,7 +21,7 @@
     <div class="mdui-col">
         <a target="_blank" href="{{.Url}}">
     <div class="mdui-grid-tile">
-        <img src="images/{{.Img}}.png"/>
+        <div class="grid-bg" style="background-image: url('images/{{.Img}}.png');"></div>
         <div class="mdui-grid-tile-actions">
             <div class="mdui-grid-tile-text">
                 <div class="mdui-grid-tile-title">{{.Title}}</div>

@@ -54,6 +54,34 @@ func NewLink(newLink conf.Link) bool {
 	return true
 }
 
+func GetNoImg() (bool, conf.Link) {
+	var noImgLink conf.Link
+	db, _ := openDB()
+	result := db.Where("img = ?", "loading").First(&noImgLink)
+	if errors.Is(result.Error, gorm.ErrRecordNotFound) {
+		return false, noImgLink
+	}
+	return true, noImgLink
+}
+
+func ChangeImg(link conf.Link) {
+	db, err := openDB()
+	if err != nil {
+		log.Fatalln(err)
+	}
+	var findLink conf.Link
+	var result = db.First(&findLink, "lid = ?", link.Lid)
+	if errors.Is(result.Error, gorm.ErrRecordNotFound) {
+		log.Fatalln("Lid不存在")
+	} else if result.Error != nil {
+		log.Fatalln(result.Error)
+	}
+	result = db.Save(&link)
+	if result.Error != nil {
+		log.Fatalln(result.Error)
+	}
+}
+
 func GetLink(page, pageSize int) []conf.Link {
 	var links []conf.Link
 	db, _ := openDB()
